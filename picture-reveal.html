@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Picture Reveal — Multi Game</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body class="page-picture-reveal">
+    <div class="app picture-reveal-app" id="picture-reveal-app">
+        <div id="screen-setup" class="screen screen--active">
+            <header class="screen-header">
+                <a class="text-link" href="index.html">← Hub</a>
+                <h1>Picture Reveal</h1>
+                <p class="lede">A photo from Pexels starts heavily blurred and dark; it <strong>gets clearer</strong> on a timer or when the host taps. Guessers do not see the word — use a second window for the full-size picture.</p>
+            </header>
+            <div class="panel">
+                <label class="field-label" for="pr-seconds">Seconds per clarity step (auto)</label>
+                <input type="number" id="pr-seconds" class="field-control" min="2" max="60" value="5" inputmode="numeric" aria-label="Seconds between automatic clarity steps">
+                <p class="field-group-hint muted">The host can always tap “More clear” or “Full picture” to skip the wait.</p>
+            </div>
+            <div class="stack">
+                <button type="button" id="btn-pr-start-host" class="btn btn-primary btn-large">Start as host</button>
+                <a class="btn btn-secondary" id="link-pr-open-player" href="picture-reveal.html?player=1" target="_blank" rel="noopener">Open player (guessers) in new window</a>
+                <p class="muted" style="margin:0; font-size:0.88rem">Keep the player page open on a TV or second device on the <strong>same site origin</strong> (same URL host) so it can sync.</p>
+            </div>
+        </div>
+
+        <div id="screen-loading" class="screen">
+            <div class="loading-inner">
+                <p id="pr-loading-message" class="lede">Loading photo from Pexels…</p>
+                <div class="spinner" aria-hidden="true"></div>
+                <button type="button" id="btn-pr-retry" class="btn btn-secondary" hidden>Try again</button>
+            </div>
+        </div>
+
+        <div id="screen-play-host" class="screen picture-reveal-play">
+            <div class="pr-play-top">
+                <p class="pr-round-label muted" id="pr-round-meta" aria-live="polite">Round 1</p>
+                <p class="pr-secret-label">Answer (host only — don’t read aloud if everyone guesses)</p>
+                <h2 class="pr-secret-word" id="pr-host-answer" aria-live="polite">—</h2>
+            </div>
+            <p class="pr-host-hint muted">The player window only shows the picture — it never shows the word.</p>
+            <div class="pr-image-frame" id="pr-image-frame" aria-label="Mystery picture with clarity stages">
+                <div class="pr-image-overlay" id="pr-image-overlay" aria-hidden="true"></div>
+                <img id="pr-host-image" class="pr-image" alt="Mystery image for the round" width="400" height="500" loading="eager" decoding="async" />
+            </div>
+            <p class="pr-stage-readout" id="pr-stage-readout" aria-live="polite">Clarity: 1 of 5</p>
+            <p class="pr-pexels-credit" id="pr-pexels-credit"></p>
+            <div class="pr-host-actions">
+                <button type="button" class="btn btn-primary" id="btn-pr-clearer">More clear</button>
+                <button type="button" class="btn btn-secondary" id="btn-pr-full">Full picture</button>
+            </div>
+            <div class="pr-host-actions pr-host-actions--secondary">
+                <button type="button" class="btn btn-secondary" id="btn-pr-next-round">Next word</button>
+                <a class="btn btn-ghost" id="link-pr-open-player-again" href="picture-reveal.html?player=1" target="_blank" rel="noopener">Open player display</a>
+            </div>
+        </div>
+
+        <div id="screen-play-player" class="screen picture-reveal-play pr-player">
+            <header class="screen-header pr-player-header">
+                <h1>Guesser view</h1>
+                <p class="lede" id="pr-player-status">Syncing with host…</p>
+            </header>
+            <div class="pr-image-frame pr-image-frame--large" id="pr-player-image-frame" aria-label="Mystery picture for guessers" hidden>
+                <div class="pr-image-overlay" id="pr-player-overlay" aria-hidden="true"></div>
+                <img id="pr-player-image" class="pr-image" alt="" width="400" height="500" />
+            </div>
+            <p class="pr-stage-readout" id="pr-player-stage" aria-live="polite" hidden></p>
+            <p class="pr-pexels-credit" id="pr-player-pexels"></p>
+        </div>
+    </div>
+
+    <script type="module" src="js/picture-reveal.js"></script>
+</body>
+</html>
