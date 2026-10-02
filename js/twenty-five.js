@@ -1,4 +1,4 @@
-import WORD_GROUPS from "../data/twenty-five-words.js";
+import WORDS from "../data/twenty-five-random-words.js";
 
 const BUDGET = 25;
 const WORDS_PER_CARD = 5;
@@ -17,7 +17,7 @@ const state = {
     /** @type {boolean[]} */
     guessed: [],
     wordsUsed: 0,
-    usedGroupIndices: /** @type {Set<number>} */ ( new Set()),
+    usedWords: /** @type {Set<string>} */ ( new Set()),
 };
 
 const el = {
@@ -57,17 +57,21 @@ const updateScoreboard = () => {
     el.scoreB.textContent = `${state.teamBName}: ${state.teamBScore}`;
 };
 
-const pickNextGroup = () => {
-    const available = WORD_GROUPS
-        .map(( g, i ) => i )
-        .filter(( i ) => !state.usedGroupIndices.has( i ));
+const pickWords = () => {
+    let available = WORDS.filter(( w ) => !state.usedWords.has( w ));
 
-    if ( available.length === 0 ) {
-        state.usedGroupIndices.clear();
-        return Math.floor( Math.random() * WORD_GROUPS.length );
+    if ( available.length < WORDS_PER_CARD ) {
+        state.usedWords.clear();
+        available = WORDS.slice();
     }
 
-    return available[Math.floor( Math.random() * available.length )];
+    const picked = [];
+    for ( let i = 0; i < WORDS_PER_CARD; i++ ) {
+        const j = Math.floor( Math.random() * available.length );
+        picked.push( available.splice( j, 1 )[0] );
+    }
+    picked.forEach(( w ) => state.usedWords.add( w ));
+    return picked;
 };
 
 const buildWordGrid = () => {
@@ -168,9 +172,7 @@ const showGameEnd = () => {
 };
 
 const startTurn = () => {
-    const idx = pickNextGroup();
-    state.usedGroupIndices.add( idx );
-    state.wordGroup = WORD_GROUPS[idx].slice();
+    state.wordGroup = pickWords();
     state.guessed = new Array( WORDS_PER_CARD ).fill( false );
     state.wordsUsed = 0;
 
@@ -193,7 +195,7 @@ const resetGame = () => {
     state.currentTeam = "A";
     state.teamATurnsPlayed = 0;
     state.teamBTurnsPlayed = 0;
-    state.usedGroupIndices.clear();
+    state.usedWords.clear();
 };
 
 document.getElementById( "btn-tf-start" )?.addEventListener( "click", () => {
